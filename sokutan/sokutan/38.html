@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>速読英単語 - (38) 電子決済が幸福感に与える影響⑶</title>
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #F5F7FA;
+            --text-color: #333;
+            --border-color: #ddd;
+            --correct-color: #27ae60;
+            --wrong-color: #e74c3c;
+        }
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+            background-color: transparent; /* 背景を透明化 */
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        /* containerを廃止し、トップページと合わせたwrapperに変更 */
+        .content-wrapper {
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+        }
+        
+        /* パンくずリストのスタイル（トップページと統一） */
+        .breadcrumb {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+            color: #357ABD;
+        }
+        .breadcrumb span {
+            color: #999;
+        }
+
+        .series-title {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        h1 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        
+        .controls {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+        .top-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .list-btn {
+            background-color: #f39c12;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+            width: 100%;
+        }
+        .list-btn:hover {
+            background-color: #d68910;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        .control-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .radio-group label {
+            font-weight: normal;
+            background-color: #eee;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            margin: 0;
+        }
+        .radio-group input[type="radio"] {
+            margin-right: 5px;
+        }
+        .radio-group label:hover {
+            background-color: #e0e0e0;
+        }
+        button.start-btn {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        button.start-btn:hover {
+            background-color: #357ABD;
+        }
+        
+        #app-area {
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .flashcard-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .flashcard {
+            width: 100%;
+            max-width: 500px;
+            height: 280px;
+            perspective: 1000px;
+            cursor: pointer;
+            margin: 20px 0 10px 0;
+            user-select: none;
+            touch-action: manipulation;
+        }
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+        .flashcard.is-flipped .flashcard-inner {
+            transform: rotateX(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #fff;
+            border: 2px solid var(--primary-color);
+            border-radius: 10px;
+        }
+        .flashcard-back {
+            transform: rotateX(180deg);
+            background-color: #fcfcfc;
+        }
+        .word-text { font-size: 1.6rem; font-weight: bold; margin-bottom: 10px; line-height: 1.4; padding: 0 10px; }
+        .word-subtext { font-size: 1rem; color: #555; margin-bottom: 10px; }
+        .swipe-hint { font-size: 0.85em; color: #888; margin-bottom: 20px; text-align: center; line-height: 1.4; }
+        
+        .question-box {
+            font-size: 1.4rem;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-width: 500px;
+        }
+        .choice-btn {
+            background-color: #fff;
+            border: 2px solid var(--primary-color);
+            padding: 12px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: left;
+            line-height: 1.4;
+        }
+        .choice-btn:hover:not(:disabled) {
+            background-color: #f0f8ff;
+        }
+        .choice-btn.correct {
+            background-color: var(--correct-color);
+            border-color: var(--correct-color);
+            color: white;
+        }
+        .choice-btn.wrong {
+            background-color: var(--wrong-color);
+            border-color: var(--wrong-color);
+            color: white;
+        }
+        
+        .fill-blank-container {
+            width: 100%;
+            max-width: 600px;
+        }
+        .ja-sentence {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #555;
+            text-align: center;
+        }
+        .en-sentence {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 1.2rem;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            width: 200px;
+            text-align: center;
+        }
+        button.action-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button.action-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .nav-container {
+            margin-top: 10px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #666;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .result-msg {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 15px;
+            text-align: center;
+            min-height: 1.5rem;
+        }
+        .correct-text { color: var(--correct-color); }
+        .wrong-text { color: var(--wrong-color); }
+        
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background-color: #fff;
+            width: 90%;
+            max-width: 900px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border-radius: 10px;
+            padding: 20px 30px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #aaa;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+            transition: color 0.2s;
+        }
+        .close-btn:hover { color: #333; }
+
+        table.word-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table.word-table th, table.word-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+            line-height: 1.4;
+        }
+        table.word-table th {
+            background-color: var(--primary-color);
+            color: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+        tr.main-word {
+            background-color: #f9f9f9;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        tr.main-word:hover {
+            background-color: #eee;
+        }
+        tr.sub-word {
+            background-color: #fff;
+            color: #555;
+        }
+        .expand-icon {
+            display: inline-block;
+            width: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="content-wrapper">
+    <div class="breadcrumb">
+         <a href="https://sites.google.com/view/english-dictionary-site/" target="_top">ホーム</a>
+         <span>&gt;</span>
+         <a href="https://sites.google.com/view/english-dictionary-site/速読英単語" target="_top">速読英単語</a>
+        <span>&gt;</span>
+        <strong>(38) 電子決済が幸福感に与える影響⑶</strong>
+    </div>
+
+    <div class="series-title">速読英単語</div>
+    <h1>(38) 電子決済が幸福感に与える影響⑶</h1>
+
+    <div id="setup-area">
+        <div class="top-buttons">
+            <button class="list-btn" onclick="openTableModal()">単語一覧表を開く</button>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>学習モードを選択:</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="mode" value="1" checked> 英→日 暗記カード</label>
+                    <label><input type="radio" name="mode" value="2"> 日→英 暗記カード</label>
+                    <label><input type="radio" name="mode" value="3"> 日→英 4択問題</label>
+                    <label><input type="radio" name="mode" value="4"> 英→日 4択問題</label>
+                    <label><input type="radio" name="mode" value="5"> 例文演習 (入力式)</label>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>出題順序を選択:</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="order" value="random" checked> ランダム</label>
+                    <label><input type="radio" name="order" value="sequential"> 番号順</label>
+                </div>
+            </div>
+            <div class="control-group" id="scope-control">
+                <label>出題範囲を選択:</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="scope" value="main" checked> メイン単語のみ</label>
+                    <label><input type="radio" name="scope" value="all"> 全単語 (派生語含む)</label>
+                </div>
+            </div>
+            <button class="start-btn" onclick="startApp()">学習をスタート</button>
+        </div>
+    </div>
+
+    <div id="app-area" class="hidden">
+        </div>
+</div>
+
+<div id="table-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeTableModal()">&times;</button>
+        <h2 style="margin-top:0; border-bottom: 2px solid var(--primary-color); padding-bottom:10px; color:var(--primary-color);">単語一覧表</h2>
+        <p style="font-size:0.9rem; color:#666;">※行をクリックすると派生語（ある場合）が展開されます。</p>
+        <div id="table-container"></div>
+    </div>
+</div>
+
+<script>
+    // 単語データ (品詞を[]で囲み、/を<br>に変換済み)
+    const wordsData = [
+        { id: "998", word: "basket", meaning: "[名] かご, バスケット ; かご1杯（の量）", exampleEn: "a basket of fruits", exampleJa: "かご1杯の果物", isMain: true },
+        { id: "999", word: "cradle", meaning: "[名] 揺りかご ; 幼時", exampleEn: "sleep in the cradle", exampleJa: "揺りかごの中で寝る", isMain: true },
+        { id: "1000", word: "treat", meaning: "[名] 楽しみ, ごほうび ; もてなし ; おごり<br>[他] を処理する ; を治療する ; におごる", exampleEn: "This is my treat.", exampleJa: "これは私のおごりです", isMain: true },
+        { id: "1001", word: "contentment", meaning: "[名] 満足 ; 幸福感", exampleEn: "find great contentment", exampleJa: "大きな満足感を見出す", isMain: true },
+        { id: "1002", word: "identical", meaning: "[形] (〜と) まったく同一の, 同様の (with, to)", exampleEn: "be identical to the original", exampleJa: "オリジナルと同一である", isMain: true },
+        { id: "1002-2", word: "identify", meaning: "[他] が同一であると認める, を確認する", exampleEn: "", exampleJa: "", isMain: false, parentId: "1002" },
+        { id: "1003", word: "boost", meaning: "[名] 高めること, 上昇<br>[他] を高める", exampleEn: "give a boost to sales", exampleJa: "売上を伸ばす", isMain: true },
+        { id: "1004", word: "elevation", meaning: "[名] 向上, 昇進, 上げる(高める)こと ; 標高", exampleEn: "her elevation to the presidency", exampleJa: "彼女の社長職への昇進", isMain: true },
+        { id: "1004-2", word: "elevate", meaning: "[他] を高める ; を元気づける, 向上させる", exampleEn: "", exampleJa: "", isMain: false, parentId: "1004" },
+        { id: "1004-3", word: "exalt", meaning: "[他] の地位を高める ; をたたえる", exampleEn: "", exampleJa: "", isMain: false, parentId: "1004" },
+        { id: "1005", word: "anticipation", meaning: "[名] 期待 ; 予期, 予想", exampleEn: "in anticipation of difficulties", exampleJa: "困難を見越して", isMain: true },
+        { id: "1005-2", word: "anticipate", meaning: "[他] を予想する", exampleEn: "", exampleJa: "", isMain: false, parentId: "1005" },
+        { id: "1006", word: "foresee", meaning: "[他] (問題・事故など)を予知する", exampleEn: "foresee the company's failure", exampleJa: "その会社の破綻を予知する", isMain: true },
+        { id: "1007", word: "foretell", meaning: "[他] を予言(予知)する", exampleEn: "foretell the weather for the coming week", exampleJa: "翌週の天気を予報する", isMain: true },
+        { id: "1008", word: "anticipatory", meaning: "[形] 予期(予想)しての, 見越しての", exampleEn: "an anticipatory attack", exampleJa: "先制攻撃", isMain: true },
+        { id: "1009", word: "select", meaning: "[他] を選ぶ<br>[形] 選り抜きの", exampleEn: "select a candidate", exampleJa: "候補者を選ぶ", isMain: true },
+        { id: "1009-2", word: "selection", meaning: "[名] 選択 ; 精選(品)", exampleEn: "", exampleJa: "", isMain: false, parentId: "1009" },
+        { id: "1009-3", word: "selective", meaning: "[形] 選択の ; 最適なものだけを選び出す", exampleEn: "", exampleJa: "", isMain: false, parentId: "1009" },
+        { id: "1010", word: "opt", meaning: "[自] (〜の方を)選択する, 決める (for)", exampleEn: "opt for the latter", exampleJa: "後者を選ぶ", isMain: true },
+        { id: "1010-2", word: "option", meaning: "[名] 選択肢 ; 選択(権の自由)", exampleEn: "", exampleJa: "", isMain: false, parentId: "1010" },
+        { id: "1010-3", word: "optional", meaning: "[形] 随意(任意)の", exampleEn: "", exampleJa: "", isMain: false, parentId: "1010" },
+        { id: "1011", word: "fantasize", meaning: "[自(他)] 空想する", exampleEn: "fantasize about the future", exampleJa: "未来について空想する", isMain: true },
+        { id: "1011-2", word: "fantasy", meaning: "[名] 空想 ; 幻想", exampleEn: "", exampleJa: "", isMain: false, parentId: "1011" },
+        { id: "1012", word: "visualize", meaning: "[他] を心に思い浮かべる ; を視覚化する", exampleEn: "visualize a peaceful scene", exampleJa: "平和な光景を思い浮かべる", isMain: true },
+        { id: "1012-2", word: "visual", meaning: "[形] 視覚の ; 目に見える", exampleEn: "", exampleJa: "", isMain: false, parentId: "1012" },
+        { id: "1013", word: "taste", meaning: "[他] の味を見る<br>[自] (〜な)味がする<br>[名] 味 ; (〜に対する)好み (for)", exampleEn: "taste the chicken salad", exampleJa: "チキンサラダの味を見る", isMain: true },
+        { id: "1014", word: "lick", meaning: "[他] をなめる<br>[名] ひとなめ ; 少量", exampleEn: "lick one's dry lips", exampleJa: "乾いた唇をなめる", isMain: true },
+        { id: "1015", word: "suck", meaning: "[他] を吸う ; をしゃぶる ; を吸い込む<br>[自] 吸う", exampleEn: "suck the juice out of a lemon", exampleJa: "レモンの果汁を吸う", isMain: true },
+        { id: "1015-2", word: "sip", meaning: "[自(他)] 少しずつ(ちびちび)飲む, すする<br>[名] ひと口", exampleEn: "", exampleJa: "", isMain: false, parentId: "1015" }
+    ];
+
+    let currentMode = "1";
+    let activeWords = [];
+    let currentIndex = 0;
+    let score = 0;
+
+    // 配列のシャッフル関数
+    function shuffle(array) {
+        let currentIndex = array.length, randomIndex;
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+        return array;
+    }
+
+    // 学習スタート
+    function startApp() {
+        currentMode = document.querySelector('input[name="mode"]:checked').value;
+        const scope = document.querySelector('input[name="scope"]:checked').value;
+        const order = document.querySelector('input[name="order"]:checked').value;
+        
+        // 単語のフィルタリング
+        if (scope === "main") {
+            activeWords = wordsData.filter(w => w.isMain);
+        } else {
+            activeWords = [...wordsData];
+        }
+
+        // 例文演習モードの場合は、例文がある単語のみに絞る
+        if (currentMode === "5") {
+            activeWords = activeWords.filter(w => w.exampleEn !== "");
+        }
+
+        // ランダム出題の場合のみシャッフルする (番号順の場合はそのまま)
+        if (order === "random") {
+            shuffle(activeWords);
+        }
+        
+        currentIndex = 0;
+        score = 0;
+
+        document.getElementById('setup-area').classList.add('hidden');
+        document.getElementById('app-area').classList.remove('hidden');
+
+        renderCurrentState();
+    }
+
+    function renderCurrentState() {
+        const appArea = document.getElementById('app-area');
+        appArea.innerHTML = ''; // クリア
+
+        if (currentIndex >= activeWords.length) {
+            renderResult(appArea);
+            return;
+        }
+
+        const currentWord = activeWords[currentIndex];
+
+        // ステータスバー
+        const statusBar = document.createElement('div');
+        statusBar.className = 'status-bar';
+        statusBar.innerHTML = `<span>問題: ${currentIndex + 1} / ${activeWords.length}</span>`;
+        if(currentMode === "3" || currentMode === "4" || currentMode === "5"){
+            statusBar.innerHTML += `<span>正解: ${score}</span>`;
+        }
+        appArea.appendChild(statusBar);
+
+        if (currentMode === "1" || currentMode === "2") {
+            renderFlashcard(appArea, currentWord);
+        } else if (currentMode === "3" || currentMode === "4") {
+            renderMultipleChoice(appArea, currentWord);
+        } else if (currentMode === "5") {
+            renderFillInBlank(appArea, currentWord);
+        }
+    }
+
+    // 1: 英→日, 2: 日→英 暗記カード (ダブルタップ対応)
+    function renderFlashcard(container, word) {
+        const isEngToJap = currentMode === "1";
+        const frontText = isEngToJap ? word.word : word.meaning;
+        const frontSub = isEngToJap ? `[${word.id}]` : `[${word.id}]`;
+        const backText = isEngToJap ? word.meaning : word.word;
+        
+        const wrapper = document.createElement('div');
+        wrapper.className = 'flashcard-wrapper';
+        
+        wrapper.innerHTML = `
+            <div class="swipe-hint">【カードの左右端(20%)をダブルタップで前後へ移動】<br>【カードの中央付近タップで裏返し】</div>
+            <div class="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <div class="word-subtext">${frontSub}</div>
+                        <div class="word-text">${frontText}</div>
+                        <div style="font-size: 0.9em; color:#888; margin-top:20px;">クリックして裏返す</div>
+                    </div>
+                    <div class="flashcard-back">
+                        <div class="word-text">${backText}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-container">
+                <button class="action-btn" onclick="prevWord()" ${currentIndex === 0 ? 'disabled' : ''}>◀ 前へ</button>
+                <button class="action-btn" onclick="nextWord()">次へ ▶</button>
+            </div>
+            <div style="margin-top:20px;">
+                <button class="action-btn" style="background:#666; font-size:0.9rem;" onclick="returnToMenu()">終了してメニューへ戻る</button>
+            </div>
+        `;
+        
+        container.appendChild(wrapper);
+
+        // ダブルタップ処理の追加
+        const flashcardEl = wrapper.querySelector('.flashcard');
+        let lastTapTime = 0;
+
+        flashcardEl.addEventListener('click', function(e) {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTapTime;
+            lastTapTime = currentTime;
+
+            // タップされた座標から、カード内の左右判定を行う
+            const rect = flashcardEl.getBoundingClientRect();
+            // e.clientX が取れない環境のフォールバック
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX) || 0; 
+            const x = clientX - rect.left;
+            const width = rect.width;
+
+            // ダブルタップ判定 (400ms以内)
+            if (tapLength > 0 && tapLength < 400) {
+                if (x < width * 0.2) {
+                    prevWord();
+                    return; // 画面遷移するので裏返し処理は実行しない
+                } else if (x > width * 0.8) {
+                    nextWord();
+                    return;
+                }
+            }
+            
+            // 通常のタップ（または中央部分のダブルタップ）はカードを裏返す
+            this.classList.toggle('is-flipped');
+        });
+    }
+
+    // 3: 日→英, 4: 英→日 4択問題
+    function renderMultipleChoice(container, word) {
+        const isJapToEng = currentMode === "3";
+        const questionText = isJapToEng ? word.meaning : word.word;
+        const correctText = isJapToEng ? word.word : word.meaning;
+        
+        // ダミー選択肢の生成
+        let choicesPool = [...wordsData].filter(w => w.id !== word.id);
+        shuffle(choicesPool);
+        let choices = [correctText];
+        for(let i=0; i<3; i++) {
+            if(choicesPool[i]) {
+                choices.push(isJapToEng ? choicesPool[i].word : choicesPool[i].meaning);
+            }
+        }
+        shuffle(choices);
+
+        let html = `<div class="question-box">${questionText}</div><div class="choices">`;
+        choices.forEach(choice => {
+            html += `<button class="choice-btn" onclick="checkMultipleChoice(this, '${choice.replace(/'/g, "\\'")}', '${correctText.replace(/'/g, "\\'")}')">${choice}</button>`;
+        });
+        html += `</div>
+            <div id="result-msg" class="result-msg"></div>
+            <div class="nav-container">
+                <button id="next-btn" class="action-btn hidden" onclick="nextWord()" style="width:200px;">次へ</button>
+            </div>
+            <div style="margin-top:20px;">
+                <button class="action-btn" style="background:#666; font-size:0.9rem;" onclick="returnToMenu()">終了してメニューへ戻る</button>
+            </div>`;
+        
+        container.innerHTML += html;
+    }
+
+    window.checkMultipleChoice = function(btn, selected, correct) {
+        const buttons = document.querySelectorAll('.choice-btn');
+        buttons.forEach(b => b.disabled = true); // 連続クリック防止
+        
+        const msgDiv = document.getElementById('result-msg');
+        if (selected === correct) {
+            btn.classList.add('correct');
+            msgDiv.innerHTML = '<span class="correct-text">正解！</span>';
+            score++;
+        } else {
+            btn.classList.add('wrong');
+            msgDiv.innerHTML = `<span class="wrong-text">不正解...</span>`;
+            // 正解ボタンをハイライト
+            buttons.forEach(b => {
+                if(b.innerHTML === correct) b.classList.add('correct');
+            });
+        }
+        document.getElementById('next-btn').classList.remove('hidden');
+    }
+
+    // 5: 例文演習
+    function renderFillInBlank(container, word) {
+        // 対象単語を ____ に置換
+        const regex = new RegExp(`\\b${word.word}\\b`, 'i');
+        const blankedSentence = word.exampleEn.replace(regex, "______");
+
+        const html = `
+            <div class="fill-blank-container">
+                <div class="ja-sentence">${word.exampleJa}</div>
+                <div class="en-sentence">${blankedSentence}</div>
+                <div class="input-group">
+                    <input type="text" id="answer-input" placeholder="英単語を入力" autocomplete="off" onkeypress="if(event.key==='Enter') checkFillInBlank('${word.word}')">
+                    <button class="action-btn" onclick="checkFillInBlank('${word.word}')">判定</button>
+                </div>
+                <div id="result-msg" class="result-msg"></div>
+                <div class="nav-container">
+                    <button id="next-btn" class="action-btn hidden" onclick="nextWord()" style="width:200px;">次へ</button>
+                </div>
+                <div style="margin-top:20px; text-align:center;">
+                    <button class="action-btn" style="background:#666; font-size:0.9rem;" onclick="returnToMenu()">終了してメニューへ戻る</button>
+                </div>
+            </div>
+        `;
+        container.innerHTML += html;
+        setTimeout(() => document.getElementById('answer-input').focus(), 100);
+    }
+
+    window.checkFillInBlank = function(correctWord) {
+        const inputEl = document.getElementById('answer-input');
+        const userAns = inputEl.value.trim().toLowerCase();
+        const msgDiv = document.getElementById('result-msg');
+        const nextBtn = document.getElementById('next-btn');
+        
+        if(nextBtn.classList.contains('hidden') === false) return; // 既に判定済み
+
+        inputEl.disabled = true;
+
+        if (userAns === correctWord.toLowerCase()) {
+            msgDiv.innerHTML = '<span class="correct-text">正解！</span>';
+            score++;
+        } else {
+            msgDiv.innerHTML = `<span class="wrong-text">不正解... 正解は: ${correctWord}</span>`;
+        }
+        nextBtn.classList.remove('hidden');
+    }
+
+    // 前・次への操作
+    window.nextWord = function() {
+        if(currentIndex < activeWords.length) {
+            currentIndex++;
+            renderCurrentState();
+        }
+    }
+    
+    window.prevWord = function() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            renderCurrentState();
+        }
+    }
+
+    function renderResult(container) {
+        let html = `<h2>学習完了！</h2>`;
+        if (currentMode === "3" || currentMode === "4" || currentMode === "5") {
+            html += `<p style="font-size:1.5rem;">正解数: ${score} / ${activeWords.length}</p>`;
+        }
+        html += `<button class="action-btn" style="margin-top:20px;" onclick="returnToMenu()">メニューに戻る</button>`;
+        container.innerHTML = html;
+    }
+
+    window.returnToMenu = function() {
+        document.getElementById('app-area').classList.add('hidden');
+        document.getElementById('setup-area').classList.remove('hidden');
+    }
+
+    /* 一覧表モーダルの処理 */
+    window.openTableModal = function() {
+        generateTableContent();
+        document.getElementById('table-modal').classList.add('active');
+    }
+    
+    window.closeTableModal = function() {
+        document.getElementById('table-modal').classList.remove('active');
+    }
+
+    function generateTableContent() {
+        const container = document.getElementById('table-container');
+        let tableHtml = `<table class="word-table">
+            <thead>
+                <tr>
+                    <th style="width:10%">番号</th>
+                    <th style="width:20%">英単語</th>
+                    <th style="width:35%">日本語訳</th>
+                    <th style="width:35%">例文</th>
+                </tr>
+            </thead>`;
+
+        const mainWords = wordsData.filter(w => w.isMain);
+        mainWords.forEach(main => {
+            const subWords = wordsData.filter(w => w.parentId === main.id);
+            const hasSub = subWords.length > 0;
+            const expandIcon = hasSub ? `<span class="expand-icon" id="icon-${main.id}">+</span>` : `<span class="expand-icon"></span>`;
+
+            tableHtml += `
+                <tbody class="word-group">
+                    <tr class="main-word" onclick="toggleSubWords('${main.id}', ${hasSub})">
+                        <td>${expandIcon} ${main.id}</td>
+                        <td><strong>${main.word}</strong></td>
+                        <td>${main.meaning}</td>
+                        <td>
+                            ${main.exampleEn ? `${main.exampleEn}<br><span style="font-size:0.85em; color:#666;">${main.exampleJa}</span>` : ''}
+                        </td>
+                    </tr>
+            `;
+            
+            if (hasSub) {
+                subWords.forEach(sub => {
+                    tableHtml += `
+                        <tr class="sub-word sub-${main.id}" style="display: none;">
+                            <td>&nbsp;&nbsp;└ ${sub.id}</td>
+                            <td>${sub.word}</td>
+                            <td>${sub.meaning}</td>
+                            <td></td>
+                        </tr>
+                    `;
+                });
+            }
+            tableHtml += `</tbody>`;
+        });
+
+        tableHtml += `</table>`;
+        container.innerHTML = tableHtml;
+    }
+
+    window.toggleSubWords = function(mainId, hasSub) {
+        if(!hasSub) return;
+        const subRows = document.querySelectorAll(`.sub-${mainId}`);
+        const icon = document.getElementById(`icon-${mainId}`);
+        
+        let isHidden = subRows[0].style.display === 'none';
+        subRows.forEach(row => {
+            row.style.display = isHidden ? 'table-row' : 'none';
+        });
+        icon.innerText = isHidden ? '-' : '+';
+    }
+    
+    // モーダルの背景クリックで閉じる処理
+    document.getElementById('table-modal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeTableModal();
+        }
+    });
+
+</script>
+
+</body>
+</html>
